@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { getQuestionById, updateQuestion } from "../../../utils/QuizService"
 
@@ -11,11 +12,6 @@ const UpdateQuestion = () => {
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
-		const role = localStorage.getItem("role")
-		if (role !== "ADMIN") {
-			navigate("/") // redirect if not admin
-			return
-		}
 		fetchQuestion()
 	}, [])
 

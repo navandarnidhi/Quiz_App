@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+
+import { Link } from "react-router-dom"
 import { createQuestion, getSubjects } from "../../../utils/QuizService"
 
 const AddQuestion = () => {
-	const navigate = useNavigate()
 	const [question, setQuestionText] = useState("")
 	const [questionType, setQuestionType] = useState("single")
 	const [choices, setChoices] = useState([""])
 	const [correctAnswers, setCorrectAnswers] = useState([""])
 	const [subject, setSubject] = useState("")
 	const [newSubject, setNewSubject] = useState("")
-	const [subjectOptions, setSubjectOptions] = useState([])
+	const [subjectOptions, setSubjectOptions] = useState([""])
 
 	useEffect(() => {
-		const role = localStorage.getItem("role")
-		if (role !== "ADMIN") {
-			navigate("/") // redirect to home if not admin
-			return
-		}
 		fetchSubjects()
 	}, [])
 

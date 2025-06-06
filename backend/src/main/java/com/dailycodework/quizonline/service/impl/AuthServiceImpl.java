@@ -24,14 +24,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private ModelMapper modelMapper;
+
     @Autowired
     private AccountService accountService;
+
     @Autowired
     private JWTTokenService jwtTokenService;
+
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private EmailService emailService;
 
@@ -55,6 +60,12 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Email is already registered.");
         }
 
+        // Prevent registering multiple Admins
+        if ("ADMIN".equalsIgnoreCase(registerRequest.getRole())
+                && accountRepository.existsByRole("ADMIN")) {
+            throw new IllegalArgumentException("An Admin account already exists. You cannot register another Admin.");
+        }
+
         Account account = new Account();
         account.setUsername(registerRequest.getUsername());
         account.setEmail(registerRequest.getEmail());
@@ -62,14 +73,17 @@ public class AuthServiceImpl implements AuthService {
         account.setVerificationToken(UUID.randomUUID().toString());
         account.setTokenExpiryDate(LocalDateTime.now().plusHours(24));
         account.setEnabled(true);
-        if (registerRequest.getRole() == null || registerRequest.getRole().isEmpty()) {
-            account.setRole("USER");
-        } else {
-            account.setRole(registerRequest.getRole().toUpperCase());
-        }
+
+        String role = (registerRequest.getRole() == null || registerRequest.getRole().isEmpty())
+                ? "USER"
+                : registerRequest.getRole().toUpperCase();
+        account.setRole(role);
+
         Account savedAccount = accountRepository.save(account);
-//        String verificationLink = "http://localhost:5173/verify-email?token=" + savedAccount.getVerificationToken();
-//        emailService.sendVerificationEmail(savedAccount.getEmail(), verificationLink);
+
+        // Optional email verification
+        // String verificationLink = "http://localhost:5173/verify-email?token=" + savedAccount.getVerificationToken();
+        // emailService.sendVerificationEmail(savedAccount.getEmail(), verificationLink);
 
         return savedAccount;
     }
@@ -77,14 +91,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean verifyEmail(String token) {
         Optional<Account> accountOptional = accountRepository.findByVerificationToken(token);
-
         if (accountOptional.isEmpty()) {
             return false;
         }
 
         Account account = accountOptional.get();
 
-        if (account.getTokenExpiryDate() != null && account.getTokenExpiryDate().isBefore(LocalDateTime.now())) {
+        if (account.getTokenExpiryDate() != null &&
+                account.getTokenExpiryDate().isBefore(LocalDateTime.now())) {
             account.setVerificationToken(null);
             account.setTokenExpiryDate(null);
             accountRepository.save(account);
@@ -105,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Optional<Account> findByEmail(String email){
+    public Optional<Account> findByEmail(String email) {
         return accountRepository.findByEmail(email);
     }
 }

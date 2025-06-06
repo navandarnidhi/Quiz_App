@@ -49,9 +49,27 @@ const SignUpPage = () => {
     };
 
     return (
-        <div className="w-full min-h-dvh register-page relative">
-            <div className="w-[600px] absolute left-1/2 -translate-x-1/2 bg-white p-10 border-2 border-solid border-gray-100 rounded-lg ">
-                <h2 className='font-bold text-center text-3xl mb-10'>Register Account</h2>
+        <div
+            className="w-full min-h-screen flex items-center justify-center relative"
+            style={{
+                backgroundImage: "url('/register.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                paddingTop: 100,
+            }}
+        >
+            <div
+                className="w-[600px] px-10 py-10 rounded-xl shadow-xl absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
+                style={{
+                    background: "rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.37)",
+                }}
+            >
+                <h2 className="font-bold text-center text-3xl text-white mb-10">Register Account</h2>
                 <Form
                     {...formItemLayout}
                     form={form}
@@ -61,7 +79,7 @@ const SignUpPage = () => {
                 >
                     <Form.Item
                         name="username"
-                        label="Username"
+                        label={<span className="text-white">Username</span>}
                         rules={[
                             { required: true, message: 'Please enter your username!' },
                             { min: 3, max: 50, message: 'Username must be between 3 and 50 characters!' },
@@ -73,7 +91,7 @@ const SignUpPage = () => {
 
                     <Form.Item
                         name="email"
-                        label="E-mail"
+                        label={<span className="text-white">E-mail</span>}
                         rules={[
                             { type: 'email', message: 'Invalid email!' },
                             { required: true, message: 'Please enter your email!' },
@@ -84,7 +102,7 @@ const SignUpPage = () => {
 
                     <Form.Item
                         name="password"
-                        label="Password"
+                        label={<span className="text-white">Password</span>}
                         rules={[
                             { required: true, message: 'Please enter your password!' },
                             { min: 6, message: 'Password must be at least 6 characters!' }
@@ -96,7 +114,7 @@ const SignUpPage = () => {
 
                     <Form.Item
                         name="confirm"
-                        label="Confirm Password"
+                        label={<span className="text-white">Confirm Password</span>}
                         dependencies={['password']}
                         hasFeedback
                         rules={[
@@ -116,7 +134,7 @@ const SignUpPage = () => {
 
                     <Form.Item
                         name="role"
-                        label="Role"
+                        label={<span className="text-white">Role</span>}
                         rules={[{ required: true, message: 'Please select a role!' }]}
                         initialValue="USER"
                     >
@@ -136,7 +154,7 @@ const SignUpPage = () => {
                             },
                         ]}
                     >
-                        <Checkbox>
+                        <Checkbox className="text-white">
                             I agree to the terms of use of the application
                         </Checkbox>
                     </Form.Item>

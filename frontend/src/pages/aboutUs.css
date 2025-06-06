@@ -1,0 +1,68 @@
+/* Title and subtitle */
+.aboutus-bg {
+    background: linear-gradient(135deg, #f3e7fa 0%, #e3f0ff 100%);
+    min-height: 100vh;
+    color: #4a2c3b;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+.aboutus-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #1e3c72; /* theme blue */
+  text-align: center;
+}
+
+.aboutus-subtitle {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  color: #051333; /* blue-600 */
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Team Members Section */
+.team-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #1e3c72; /* theme blue */
+}
+
+.team-card p {
+  color: #051333; /* blue-600 */
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+/* Features/Services Section */
+.feature-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e3c72; /* theme blue */
+  margin: 1rem 0 0.5rem 0;
+}
+
+.feature-card p {
+  color: #051333; /* blue-600 */
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+/* Feedback Form */
+.feedback-title {
+  text-align: center;
+  color: #1e3c72; /* theme blue */
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.feedback-form label {
+  color: #1e3c72; /* theme blue */
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Card, Descriptions, message, Space, Spin } from 'antd';
 import { EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+
 import QuizService from "../../service/quizService.js";
 import QuestionService from "../../service/questionService.js";
-import useAuthStore from '../../store/authStore.js'; // ✅ FIXED import
+import useAuthStore from "../../store/authStore.js"; // ✅ import auth store
 
 function QuizDetail() {
     const { id } = useParams();
@@ -12,7 +13,9 @@ function QuizDetail() {
     const [questionCount, setQuestionCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { user } = useAuthStore();
+
+    const user = useAuthStore((state) => state.user); // ✅ get logged-in user
+    const isAdmin = user?.role === "ADMIN"; // ✅ check role
 
     useEffect(() => {
         const fetchQuizDetails = async () => {
@@ -36,11 +39,9 @@ function QuizDetail() {
     if (loading) {
         return <Spin tip="Loading quiz details..." size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '64vh' }} />;
     }
-
     if (error) {
         return <div style={{ textAlign: 'center', color: 'red', fontSize: '1.2em', marginTop: '20px' }}>{error}</div>;
     }
-
     if (!quiz) {
         return <div style={{ textAlign: 'center', fontSize: '1.2em', marginTop: '20px' }}>Quiz not found.</div>;
     }
@@ -50,7 +51,7 @@ function QuizDetail() {
             <Card
                 title={quiz.title}
                 extra={
-                    user?.role === 'ADMIN' && (
+                    isAdmin && ( // ✅ only show if admin
                         <Space>
                             <Link to={`/quizzes/${quiz.quizId}/edit`}>
                                 <Button type="default" icon={<EditOutlined />}>

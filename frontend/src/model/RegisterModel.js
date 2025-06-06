@@ -1,36 +1,43 @@
 class RegisterModel {
     constructor() {
-        this.fullName = undefined;
+        this.username = undefined;
         this.email = undefined;
         this.password = undefined;
-        this.username = undefined;
-        this.phone = undefined;
-        this.gender = undefined;
+        this.confirmPassword = undefined;
+        this.role = 'User';
+        this.agreeToTerms = false;
     }
-    setFullName(fullName) {
-        this.fullName = fullName;
-        return this;
-    }
-    setEmail(email) {
-        this.email = email;
-        return this;
-    }
-    setPassword(password) {
-        this.password = password;
-        return this;
-    }
+
     setUsername(username) {
         this.username = username;
         return this;
     }
-    setPhone(phone) {
-        this.phone = phone;
+
+    setEmail(email) {
+        this.email = email;
         return this;
     }
-    setGender(gender) {
-        this.gender = gender;
+
+    setPassword(password) {
+        this.password = password;
         return this;
     }
+
+    setConfirmPassword(confirmPassword) {
+        this.confirmPassword = confirmPassword;
+        return this;
+    }
+
+    setRole(role) {
+        this.role = role;
+        return this;
+    }
+
+    setAgreeToTerms(agree) {
+        this.agreeToTerms = agree;
+        return this;
+    }
+
     build() {
         return this;
     }

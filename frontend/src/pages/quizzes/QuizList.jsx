@@ -1,57 +1,132 @@
-import React, { useEffect, useState } from 'react';
-import { getAllQuizzes } from '../../services/quizService';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button, Card, Col, Empty, message, Popconfirm, Row, Spin, Space, Tag } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined, QuestionCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import QuizService from "../../service/quizService.js";
+import useAuthStore from "../../store/authStore.js";
 
-const QuizList = () => {
-  const [quizzes, setQuizzes] = useState([]);
-  const [loading, setLoading] = useState(true);
+function QuizList() {
+    const [quizzes, setQuizzes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  // ✅ Safely parse user from localStorage
-  const rawUser = localStorage.getItem("user");
-  const user = rawUser && rawUser !== "undefined" ? JSON.parse(rawUser) : null;
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const currentUser = useAuthStore((state) => state.currentUser);
+    const isAdmin = isAuthenticated && currentUser?.role === 'ADMIN';
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
-        const data = await getAllQuizzes();
-        setQuizzes(data);
-      } catch (error) {
-        console.error('Error fetching quizzes:', error);
-      } finally {
-        setLoading(false);
-      }
+    useEffect(() => {
+        QuizService.getAllQuizzes()
+            .then(response => {
+                setQuizzes(response.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Failed to fetch quizzes:", err);
+                message.error("Failed to load quiz list.");
+                setError("An error occurred while loading data.");
+                setLoading(false);
+            });
+    }, [isAdmin]);
+
+    const handleDelete = (id) => {
+        QuizService.deleteQuiz(id)
+            .then(() => {
+                setQuizzes(quizzes.filter(quiz => quiz.quizId !== id));
+                message.success("Quiz deleted successfully!");
+            })
+            .catch(err => {
+                console.error("Failed to delete quiz:", err);
+                message.error("Failed to delete quiz.");
+            });
     };
 
-    fetchQuizzes();
-  }, []);
+    if (loading) {
+        return <Spin tip="Loading quiz list..." size="large" className="flex justify-center items-center h-64" />;
+    }
+    if (error) {
+        return <div className="text-center text-red-500 text-lg mt-8">{error}</div>;
+    }
 
-  if (loading) return <div>Loading quizzes...</div>;
+    return (
+        <div style={{ padding: '24px' }}>
+            <h1 style={{ fontSize: '2em', marginBottom: '20px' }}>
+                {isAdmin ? 'Quiz List Management (Admin)' : 'Quiz List'}
+            </h1>
 
-  return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Available Quizzes</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {quizzes.map((quiz) => (
-          <div key={quiz.id} className="p-4 border rounded shadow bg-white">
-            <h3 className="text-xl font-semibold">{quiz.title}</h3>
-            <p className="text-gray-600">{quiz.description}</p>
-
-            {/* ✅ Show different actions based on role */}
-            {user?.role === "ADMIN" ? (
-              <div className="mt-2 space-x-2">
-                <Link to={`/quiz/${quiz.id}/questions`} className="text-blue-600 hover:underline">Manage Questions</Link>
-                <Link to={`/quiz/edit/${quiz.id}`} className="text-yellow-600 hover:underline">Edit</Link>
-              </div>
-            ) : (
-              <div className="mt-2">
-                <Link to={`/quiz/${quiz.id}`} className="text-green-600 hover:underline">Take Quiz</Link>
-              </div>
+            {isAdmin && (
+                <Link to="/quizzes/new">
+                    <Button type="primary" icon={<PlusOutlined />} style={{ marginBottom: '20px' }}>
+                        Create New Quiz
+                    </Button>
+                </Link>
             )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+
+            {quizzes.length === 0 ? (
+                <Empty description={isAdmin ? "No quizzes have been created yet." : "No available quizzes to take."} />
+            ) : (
+                <Row gutter={[16, 16]}>
+                    {quizzes.map(quiz => (
+                        <Col xs={24} sm={12} lg={8} key={quiz.quizId}>
+                            <Card
+                                title={quiz.title}
+                                extra={
+                                    <Link to={`/quizzes/${quiz.quizId}`}>
+                                        <Button type="link">
+                                            {isAdmin ? 'Admin Details' : 'Quiz Details'}
+                                        </Button>
+                                    </Link>
+                                }
+                                actions={
+                                    isAdmin ? (
+                                        [
+                                            <Link key="edit" to={`/quizzes/${quiz.quizId}/edit`}>
+                                                <EditOutlined /> Edit
+                                            </Link>,
+                                            <Popconfirm
+                                                key="delete"
+                                                title="Are you sure you want to delete this quiz?"
+                                                onConfirm={() => handleDelete(quiz.quizId)}
+                                                okText="Yes"
+                                                cancelText="No"
+                                                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                                            >
+                                                <span>
+                                                    <DeleteOutlined /> Delete
+                                                </span>
+                                            </Popconfirm>,
+                                            <Link key="questions" to={`/quizzes/${quiz.quizId}/questions`}>
+                                                <QuestionCircleOutlined /> Manage Q.
+                                            </Link>
+                                        ]
+                                    ) : (
+                                        isAuthenticated ? (
+                                            [
+                                                <Link key="start-quiz" to={`/take-quiz/${quiz.quizId}`}>
+                                                    <Button type="text" icon={<PlayCircleOutlined />}>Start Quiz</Button>
+                                                </Link>,
+                                            ]
+                                        ) : (
+                                            [
+                                                <Space key="login-to-take">
+                                                    <Link to="/login">
+                                                        <Button type="primary">Login to take quiz</Button>
+                                                    </Link>
+                                                </Space>
+                                            ]
+                                        )
+                                    )
+                                }
+                            >
+                                <p><strong>Description:</strong> {quiz.description}</p>
+                                <p><strong>Duration:</strong> {quiz.duration / 60} minutes</p>
+                                {isAdmin && quiz.status && <p><strong>Status:</strong> <Tag color="blue">{quiz.status}</Tag></p>}
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            )}
+        </div>
+    );
+}
 
 export default QuizList;

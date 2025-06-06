@@ -1,8 +1,8 @@
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {Button, Checkbox, Form, Input, message} from "antd";
-import {useNavigate} from "react-router-dom";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore.js";
-
+import "./signIn.css";
 
 const SignInPage = () => {
     const navigate = useNavigate();
@@ -11,63 +11,102 @@ const SignInPage = () => {
 
     const onFinish = async (values) => {
         try {
-            console.log('Login values:', values);
             await login(values);
-            message.success('Login successful!');
-            navigate('/');
+            message.success("Login successful!");
+            navigate("/dashboard");
         } catch (error) {
-            const errorMessage = error.response?.data?.message || 'Login failed. Please check your username and password.';
+            const errorMessage =
+                error.response?.data?.message ||
+                "Login failed. Please check your username and password.";
             message.error(errorMessage);
         }
     };
 
     return (
-        <div className="w-full min-h-dvh login-page relative " style={{ paddingTop: 100 }} >
+        <div
+            className="w-full min-h-screen flex items-center justify-center relative"
+            style={{
+                backgroundImage: "url('/login.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                paddingTop: 100,
+            }}
+        >
             <div
-                className="w-[400px] absolute left-1/2 -translate-x-1/2 bg-white p-10 border-2 border-solid border-gray-100 rounded-lg ">
-                <h2 className='font-bold text-center text-3xl mb-10'>Sign In</h2>
+                className="w-[400px] px-8 py-10 rounded-xl shadow-xl absolute top-1/2 login-fadein"
+                style={{
+                    left: "40%",
+                    // transform: "translate(-50%, -50%)", // REMOVE this line!
+                    background: "rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.37)",
+                }}
+            >
+                <h2 className="text-3xl font-bold text-center text-white mb-8">
+                    Sign In
+                </h2>
                 <Form
                     name="normal_login"
                     className="login-form"
-                    initialValues={{remember: true}}
+                    initialValues={{ remember: true }}
                     onFinish={onFinish}
+                    layout="vertical"
                 >
                     <Form.Item
                         name="username"
-                        rules={[{required: true, message: 'Please enter your username!'}]}
+                        label={<span className="text-white">Username</span>}
+                        rules={[
+                            { required: true, message: "Please enter your username!" },
+                        ]}
                     >
-                        <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Username"/>
+                        <Input
+                            prefix={<UserOutlined />}
+                            placeholder="Username"
+                            className="rounded-md"
+                        />
                     </Form.Item>
                     <Form.Item
                         name="password"
-                        rules={[{required: true, message: 'Please enter your password!'}]}
+                        label={<span className="text-white">Password</span>}
+                        rules={[
+                            { required: true, message: "Please enter your password!" },
+                        ]}
                     >
-                        <Input
-                            prefix={<LockOutlined className="site-form-item-icon"/>}
-                            type="password"
+                        <Input.Password
+                            prefix={<LockOutlined />}
                             placeholder="Password"
+                            className="rounded-md"
                         />
                     </Form.Item>
                     <Form.Item>
                         <Form.Item name="remember" valuePropName="checked" noStyle>
-                            <Checkbox>Remember me</Checkbox>
+                            <Checkbox className="text-white">Remember me</Checkbox>
                         </Form.Item>
                     </Form.Item>
-                    <Form.Item className="flex justify-center items-center">
-                        <Button type="primary" htmlType="submit" className="login-form-button mr-1" loading={loading}>
+                    <Form.Item className="text-center">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            loading={loading}
+                            className="w-full"
+                        >
                             Sign In
                         </Button>
                     </Form.Item>
                 </Form>
-                <div>
-                    <div className="text-sm text-center mt-3">
-                        Don&apos;t have an account? <a className="font-semibold" href="/register">Register now!</a>
-                    </div>
-                    <div className="text-center ">
-                        <a className="login-form-forgot text-xs text-red-400" href="">
-                            Forgot password
-                        </a>
-                    </div>
+                <div className="text-center text-white text-sm">
+                    Don't have an account?{" "}
+                    <a className="font-semibold text-blue-200" href="/register">
+                        Register now!
+                    </a>
+                </div>
+                <div className="text-center mt-1">
+                    <a className="text-xs text-red-300" href="#">
+                        Forgot password
+                    </a>
                 </div>
             </div>
         </div>
