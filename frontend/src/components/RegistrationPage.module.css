@@ -1,0 +1,48 @@
+
+.signupForm {
+  width: 25%;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.signupFormWrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.resendOtp {
+  color: rgb(90, 64, 239);
+  font-weight: 500;
+}
+
+.resendOtp:hover {
+  cursor: pointer;
+  color: darkblue;
+}
+
+/* Tablet and Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .signupForm {
+    width: 80%;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .signupForm {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .signupFormWrapper {
+    padding: 10px;
+  }
+}

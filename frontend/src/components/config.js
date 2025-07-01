@@ -1,0 +1,1 @@
+export const API_URL = "https://quiz-notes-app.onrender.com"

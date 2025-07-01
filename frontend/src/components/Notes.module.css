@@ -1,0 +1,21 @@
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  transition: all 0.5s;
+}
+.cardImg:hover{
+  cursor: pointer;
+  transform: scale(1.1,1.1);
+}
+
+.notesWrapper{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; 
+  gap: 20px;
+  padding: 0 20px;
+}
+.notesCard{
+  overflow: hidden;
+}

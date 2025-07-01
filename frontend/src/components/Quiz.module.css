@@ -1,0 +1,17 @@
+.QuizWrapper{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; 
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.cardImg {
+  width: 100%; 
+  /* height: 100%;  */
+  height: 200px;
+  object-fit: cover; 
+}
+.card{
+  border-radius: 10px;
+}

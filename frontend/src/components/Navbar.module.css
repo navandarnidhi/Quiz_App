@@ -1,0 +1,25 @@
+.navButton {
+  font-size: 20px;
+  margin: 15px 30px;
+  padding: 5px 20px;
+  border-radius: 50px;
+}
+
+.navButton:hover {
+  background-color: #008080;
+  color: #ffffff;
+  border-radius: 50px;
+}
+.navigationBar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+
+.dropdown{
+  text-align: center;
+  font-size:large !important;
+}
+.listItem {
+  margin-bottom: 9px;
+}
